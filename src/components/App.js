@@ -1,28 +1,33 @@
-// App.js
 import React, { useState } from "react";
 import Filters from "./Filters";
 import PetBrowser from "./PetBrowser";
-import data from "../db.json"; // Adjust the path based on the actual location
+import data from "../db.json";
 
 function App() {
-  const [pets, setPets] = useState(data.pets);
-  const [filters, setFilters] = useState({ type: "all" });
+  const [pets, setPets] = useState(data.pets); // State to track pets
+  const [filters, setFilters] = useState({ type: "all" }); // State to track filter
 
+  // Handle filter change
   const handleFilterChange = (newType) => {
     setFilters({ type: newType });
   };
 
+  // Handle the "Find pets" button click
   const handleFindPetsClick = () => {
-    const filteredPets = filters.type === "all"
-      ? data.pets
-      : data.pets.filter(pet => pet.type === filters.type);
+    const filteredPets =
+      filters.type === "all"
+        ? data.pets
+        : data.pets.filter((pet) => pet.type === filters.type);
     setPets(filteredPets);
   };
 
+  // Handle pet adoption by updating the isAdopted status
   const handleAdoptPet = (id) => {
-    setPets(pets.map(pet =>
-      pet.id === id ? { ...pet, adopted: true } : pet
-    ));
+    setPets((prevPets) =>
+      prevPets.map((pet) =>
+        pet.id === id ? { ...pet, isAdopted: true } : pet
+      )
+    );
   };
 
   return (
@@ -33,7 +38,10 @@ function App() {
       <div className="ui container">
         <div className="ui grid">
           <div className="four wide column">
-            <Filters onChangeType={handleFilterChange} onFindPetsClick={handleFindPetsClick} />
+            <Filters
+              onChangeType={handleFilterChange}
+              onFindPetsClick={handleFindPetsClick}
+            />
           </div>
           <div className="twelve wide column">
             <PetBrowser pets={pets} onAdoptPet={handleAdoptPet} />
